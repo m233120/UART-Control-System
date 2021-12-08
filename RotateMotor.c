@@ -7,7 +7,7 @@
 #define delay 2
 
 void Port_Init(void);
-void rotate(int degrees, int direct, int motorNum);
+void rotate(int degrees, int motorNum);
 void reset(void);
 double toSteps(int degrees);
 int optimizeDeg(int degrees);
@@ -44,19 +44,12 @@ int optimizeDeg(int degrees) //This optimizes the rotation by preventing needles
     return degrees;
 }
 
-void rotate(int degrees, int direct, int motorNum)
+void rotate(int degrees, int motorNum)
 {
     volatile unsigned int* FIO1SET_ptr = (unsigned int *) 0x2009C038;
     volatile unsigned int* FIO1CLR_ptr = (unsigned int *) 0x2009C03C; 
     int opDeg = optimizeDeg(degrees);
 
-    if(direct == 1) //User told the motor to move directly to an angle relative to true "north"
-    {
-				if(motorNum == 1)
-					opDeg = opDeg - currentDeg1;
-				else
-					opDeg = opDeg - currentDeg2;
-    }
 	
 		if(motorNum == 1)
 			currentDeg1 = currentDeg1 + opDeg;
@@ -219,10 +212,10 @@ void rotate(int degrees, int direct, int motorNum)
 
 void reset(void)
 {
-    rotate(0, 1, 1);
-    rotate(0, 1, 2);
+    rotate(-currentDeg1, 1);
+    rotate(-currentDeg2, 2);
     currentDeg1 = 0;
-		currentDeg2 = 0;
+	currentDeg2 = 0;
 }
 
 void Port_Init(void)
