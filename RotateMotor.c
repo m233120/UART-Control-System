@@ -207,7 +207,7 @@ void rotate(int degrees, int motorNum)
             *(FIO1CLR_ptr) = clear;
         }
     }		
-		delay_x_ms(250);
+		delay_x_ms(100);
 }
 
 void reset(void)
